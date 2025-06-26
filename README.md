@@ -4,7 +4,7 @@ This is a **Customer Ordering App** for a two-person project demonstrating inter
 
 Built with **Svelte + TypeScript** for the frontend and **Node.js + Express** for the backend, this system allows users to place simple food and drink orders which are sent to another system (Person B) via RabbitMQ.
 
----
+
 
 ## Overview
 
@@ -15,7 +15,7 @@ This app is part of a two-part system:
 
 The two apps communicate via RabbitMQ using a shared `orders` message queue.
 
----
+
 
 ## Features
 
@@ -24,7 +24,7 @@ The two apps communicate via RabbitMQ using a shared `orders` message queue.
 - Backend POST endpoint to receive orders
 - Sends order data to RabbitMQ in JSON format
 
----
+
 
 ## Tech Stack
 
