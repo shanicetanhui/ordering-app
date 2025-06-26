@@ -26,7 +26,7 @@ async function connectRabbit() {
 app.post('/api/order', async (req, res) => {
 	try {
 		const { item, qty } = req.body;
-		console.log('Received body:', req.body);
+		console.log('Received order:', req.body);
 
 		if (!item || !qty) {
 			return res.status(400).json({ message: 'Missing item or qty' });
@@ -39,7 +39,7 @@ app.post('/api/order', async (req, res) => {
 
 		// Send message to RabbitMQ
 		const order = JSON.stringify({ item, qty });
-		//await channel.sendToQueue('orders', Buffer.from(order));
+		await channel.sendToQueue('orders', Buffer.from(order));
 		console.log('✅ Sent to RabbitMQ:', order);
 
 		res.status(200).json({ message: 'Order received' });
