@@ -1,109 +1,141 @@
 <script lang="ts">
-  let item = "";
+  let items = [
+    { name: "Coffee", emoji: "☕" },
+    { name: "Tea", emoji: "🍵" },
+    { name: "Juice", emoji: "🧃" },
+    { name: "Sandwich", emoji: "🥪" },
+    { name: "Pizza", emoji: "🍕" },
+    { name: "Cookie", emoji: "🍪" },
+  ];
+
+  let selectedItem = "";
   let qty = 1;
   let submitted = false;
 
   async function placeOrder() {
+    if (!selectedItem || qty < 1) return;
+
     const res = await fetch("http://localhost:3000/api/order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ item, qty }),
+      body: JSON.stringify({ item: selectedItem, qty }),
     });
     if (res.ok) submitted = true;
   }
 </script>
 
-<h1>Menu</h1>
+<div class="background">
+  <h1
+    style="text-align: center; font-family: 'Courier New', Courier, monospace;"
+  >
+    Menu
+  </h1>
 
-<div class="order-container">
-  <form on:submit|preventDefault={placeOrder}>
-    <label>
-      Select an item:
-      <select bind:value={item}>
-        <option value="" disabled selected>Select an item</option>
-        <option>Coffee</option>
-        <option>Tea</option>
-        <option>Sandwich</option>
-        <option>Juice</option>
-        <option>Water</option>
-      </select>
-    </label>
+  <div class="menu">
+    {#each items as item}
+      <div
+        class="card {selectedItem === item.name ? 'selected' : ''}"
+        on:click={() => {
+          selectedItem = item.name;
+          submitted = false;
+        }}
+        role="button"
+        tabindex="0"
+        on:keydown={(e) => {
+          if (e.key === "Enter" || e.key === "") selectedItem = item.name;
+        }}
+        aria-pressed={selectedItem === item.name}
+      >
+        <div class="emoji">{item.emoji}</div>
+        <div>{item.name}</div>
+      </div>
+    {/each}
+  </div>
 
-    <label>
+  <div class="container">
+    <label style="font-family: 'Courier New', Courier, monospace;">
       Quantity:
-      <input type="number" min="1" bind:value={qty} />
+      <input
+        style="font-family: 'Courier New', Courier, monospace;"
+        type="number"
+        min="1"
+        bind:value={qty}
+      />
     </label>
 
-    <button on:click={placeOrder} disabled={!item || qty < 1}>
+    <button on:click={placeOrder} disabled={!selectedItem || qty < 1}>
       Place Order
     </button>
-  </form>
-
-  {#if submitted}
-    <p class="success">Order placed for {qty} x {item}!</p>
-  {/if}
+  </div>
 </div>
 
+{#if submitted}
+  <p class="success">Order placed for {qty} x {selectedItem}!</p>
+{/if}
+
 <style>
-    h1 {
-        text-align:center;
-        margin-bottom: 1em;
-        font-family: sans-serif;
-    }
+  .background {
+    background: linear-gradient(to bottom right, #ffffff, #cdd7f3);
+    min-height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
 
-    .order-container {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 1.5em;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0, 0,1);
-        background: #f9f9f9;
-        font-family: sans-serif;
-    }
+  .menu {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-width: 600px;
+    margin: 2rem auto;
+    justify-content: center;
+  }
 
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 1em;
-    }
+  .card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    user-select: none;
+    flex: 1 1 100px;
+    transition: border-color 0.3s ease;
+    background-color: rgba(253, 248, 252, 0.7);
+    font-family: "Courier New", Courier, monospace;
+  }
 
-    label {
-        display: flex;
-        flex-direction: column;
-        font-weight: bold;
-    }
+  .card.selected {
+    border-color: #4caf50;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+    background-color: #e8f5e9;
+  }
 
-    select, 
-    input,
-    button {
-        padding: 0.5em;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 1rem;
-    }
+  .emoji {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
 
-    button {
-		background-color: #4caf50;
-		color: white;
-		cursor: pointer;
-		transition: background-color 0.2s;
-	}
+  .container {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
 
-	button:disabled {
-		background-color: #aaa;
-		cursor: not-allowed;
-	}
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    font-family: "Courier New", Courier, monospace;
+  }
 
-	button:hover:not(:disabled) {
-		background-color: #388e3c;
-	}
-
-	.success {
-		margin-top: 1em;
-		padding: 0.75em;
-		background-color: #dff0d8;
-		color: #3c763d;
-		border-radius: 6px;
-		text-align: center;
-	}
+  button:disabled {
+    background-color: #9e9e9e;
+    cursor: not-allowed;
+  }
 </style>
