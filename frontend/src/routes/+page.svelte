@@ -82,6 +82,20 @@
       Place Order
     </button>
   </div>
+
+  {#if statusUpdates.length > 0}
+    <h2 style="font-family: 'Courier New', Courier, monospace;">
+      Completed Orders
+    </h2>
+
+    <ul>
+      {#each statusUpdates as update}
+        <li style="font-family: 'Courier New', Courier, monospace;">
+          Order #{update.orderId} is {update.status}!
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </div>
 
 {#if submitted}
@@ -92,15 +106,6 @@
       <button class="close-btn" on:click={() => (submitted = false)}>✕</button>
     </div>
   </div>
-{/if}
-
-{#if statusUpdates.length > 0}
-  <h2>Completed Orders</h2>
-  <ul>
-    {#each statusUpdates as update}
-      <li>Order #{update.orderId} is {update.status}!</li>
-    {/each}
-  </ul>
 {/if}
 
 <style>
