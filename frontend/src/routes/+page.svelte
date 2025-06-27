@@ -12,9 +12,11 @@
   ];
 
   let selectedItem = "";
-  let quantity = 1; // Changed from qty to quantity for clarity
+  let quantity = 1;
   let submitted = false;
   let statusUpdates: { orderId: number; status: string }[] = [];
+  let showStatusPopup = false;
+  let latestStatus: { orderId: number; status: string } | null = null;
 
   async function placeOrder() {
     if (!selectedItem || quantity < 1) return;
@@ -32,6 +34,12 @@
       const res = await fetch("http://localhost:3000/api/status");
       if (res.ok) {
         const data = await res.json();
+        if (data.length > statusUpdates.length) {
+          // New status update received
+          const newUpdate = data[data.length - 1];
+          latestStatus = newUpdate;
+          showStatusPopup = true;
+        }
         statusUpdates = data;
       }
     }, 2000);
@@ -85,21 +93,6 @@
       Place Order
     </button>
   </div>
-
-  {#if statusUpdates.length > 0}
-    <h2 style="font-family: caveat brush; color: #ffffff; font-size: 2.5rem;">
-      Order Status:
-    </h2>
-    <ul>
-      {#each statusUpdates as update}
-        <li
-          style="font-family: caveat brush; color: lightgrey; margin-left: 2rem;"
-        >
-          Order ID #{update.orderId} is {update.status}!
-        </li>
-      {/each}
-    </ul>
-  {/if}
 </div>
 
 {#if submitted}
@@ -112,9 +105,24 @@
   </div>
 {/if}
 
+{#if showStatusPopup && latestStatus}
+  <div class="popup-notification">
+    <div class="popup-content">
+      <span class="popup-icon">🔔</span>
+      <p>Order ID #{latestStatus.orderId} is {latestStatus.status}!</p>
+      <button class="close-btn" on:click={() => (showStatusPopup = false)}
+        >✕</button
+      >
+    </div>
+  </div>
+{/if}
+
 <style>
   .background {
-    background: linear-gradient(to bottom right, #ad7642, #683301);
+    background-image: url('/images/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     min-height: 100vh;
     padding: 2rem;
     box-sizing: border-box;
@@ -142,6 +150,7 @@
     transition: border-color 0.3s ease;
     background-color: rgba(253, 248, 252, 0.7);
     font-family: "Caveat Brush";
+    font-size: larger;
   }
 
   .card.selected {
@@ -233,21 +242,6 @@
 
   .close-btn:hover {
     color: #333;
-  }
-
-  ul {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-left: 1.5rem;
-  }
-
-  li {
-    margin-bottom: 0.3rem;
-    font-size: 1.2rem;
-  }
-
-  h2 {
-    margin-bottom: 0.5rem;
   }
 
   h1 {
