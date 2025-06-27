@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import "@fontsource/caveat-brush";
 
   let items = [
-    { name: "Coffee", emoji: "☕" },
-    { name: "Tea", emoji: "🍵" },
-    { name: "Juice", emoji: "🧃" },
-    { name: "Sandwich", emoji: "🥪" },
-    { name: "Pizza", emoji: "🍕" },
-    { name: "Cookie", emoji: "🍪" },
+    { name: "Coffee", image: "/images/coffee.png" },
+    { name: "Tea", image: "/images/tea.png" },
+    { name: "Juice", image: "/images/juice.png" },
+    { name: "Sandwich", image: "/images/sandwich.png" },
+    { name: "Pizza", image: "/images/pizza.png" },
+    { name: "Cake", image: "/images/cake.png" },
   ];
 
   let selectedItem = "";
@@ -41,7 +42,7 @@
 
 <div class="background">
   <h1
-    style="text-align: center; font-family: 'Courier New', Courier, monospace;"
+    style="text-align: center; font-family: caveat brush; color: #ffffff; font-size: 4rem;"
   >
     Menu
   </h1>
@@ -61,17 +62,19 @@
         }}
         aria-pressed={selectedItem === item.name}
       >
-        <div class="emoji">{item.emoji}</div>
+        <img src={item.image} alt={item.name} class="item-image" />
         <div>{item.name}</div>
       </div>
     {/each}
   </div>
 
   <div class="container">
-    <label style="font-family: 'Courier New', Courier, monospace;">
+    <label
+      style="font-family: caveat brush; color: #ffffff; font-size: 1.5rem;"
+    >
       Quantity:
       <input
-        style="font-family: 'Courier New', Courier, monospace;"
+        style="font-family: caveat brush; color: #333;"
         type="number"
         min="1"
         bind:value={quantity}
@@ -84,14 +87,15 @@
   </div>
 
   {#if statusUpdates.length > 0}
-    <h2 style="font-family: 'Courier New', Courier, monospace;">
-      Completed Orders
+    <h2 style="font-family: caveat brush; color: #ffffff; font-size: 2.5rem;">
+      Order Status:
     </h2>
-
     <ul>
       {#each statusUpdates as update}
-        <li style="font-family: 'Courier New', Courier, monospace;">
-          Order #{update.orderId} is {update.status}!
+        <li
+          style="font-family: caveat brush; color: lightgrey; margin-left: 2rem;"
+        >
+          Order ID #{update.orderId} is {update.status}!
         </li>
       {/each}
     </ul>
@@ -110,7 +114,7 @@
 
 <style>
   .background {
-    background: linear-gradient(to bottom right, #ffffff, #cdd7f3);
+    background: linear-gradient(to bottom right, #ad7642, #683301);
     min-height: 100vh;
     padding: 2rem;
     box-sizing: border-box;
@@ -123,6 +127,7 @@
     max-width: 600px;
     margin: 2rem auto;
     justify-content: center;
+    margin-top: 0%;
   }
 
   .card {
@@ -136,7 +141,7 @@
     flex: 1 1 100px;
     transition: border-color 0.3s ease;
     background-color: rgba(253, 248, 252, 0.7);
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Caveat Brush";
   }
 
   .card.selected {
@@ -145,8 +150,11 @@
     background-color: #e8f5e9;
   }
 
-  .emoji {
-    font-size: 2rem;
+  .item-image {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
     margin-bottom: 0.5rem;
   }
 
@@ -164,9 +172,9 @@
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin-left: 0.5rem;
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Caveat Brush";
   }
 
   button:disabled {
@@ -188,25 +196,25 @@
   }
 
   .popup-content {
-    background: white;
-    padding: 1em;
+    background: rgba(238, 231, 231, 0.95);
+    padding: 2em;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     text-align: center;
     position: relative;
     max-width: 400px;
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Caveat Brush";
   }
 
   .popup-icon {
-    font-size: 3rem;
+    font-size: 2rem;
     display: block;
     margin-bottom: 1rem;
   }
 
   .popup-content p {
     margin: 0 0 1.5rem 0;
-    font-size: 1.1rem;
+    font-size: 1.8rem;
     color: #333;
   }
 
@@ -225,5 +233,25 @@
 
   .close-btn:hover {
     color: #333;
+  }
+
+  ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.3rem;
+    font-size: 1.2rem;
+  }
+
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
   }
 </style>
