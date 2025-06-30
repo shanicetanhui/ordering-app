@@ -11,7 +11,7 @@ const app = express();
 const PORT = 3000;
 const completedOrders: OrderStatus[] = [];
 
-const RABBITMQ_URL = 'amqp://localhost';
+const RABBITMQ_URL = process.env.RABBITMQ_URL || 'amqp://localhost';
 
 app.use(cors());
 app.use(express.json());
