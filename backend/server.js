@@ -2,9 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const amqp = require('amqplib');
 
+interface OrderStatus {
+	orderId: number;
+	status: string;
+}
+
 const app = express();
-const PORT = 3000;
-const completedOrders = [];
+const PORT: number = 3000;
+const completedOrders: OrderStatus[] = [];
 
 const RABBITMQ_URL = 'amqp://localhost';
 
