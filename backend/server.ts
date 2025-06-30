@@ -109,3 +109,18 @@ receiveMessages();
 app.get('/api/status', (req: any, res: any) => {
 	res.json(completedOrders);
 });
+
+// Health check endpoint
+app.get('/api/status', async (req: any, res: any) => {
+	try {
+		const status = {
+			server: 'running',
+			rabbitmq: channel ? 'connected' : 'disconnected',
+			timestamp: new Date().toISOString()
+		};
+		res.status(200).json(status);
+	} catch (err) {
+		console.error('❌ Error in /api/status:', err);
+		res.status(500).json({ message: 'Server error' });
+	}
+});

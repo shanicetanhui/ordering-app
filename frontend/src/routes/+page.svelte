@@ -21,7 +21,7 @@
   async function placeOrder() {
     if (!selectedItem || quantity < 1) return;
 
-    const res = await fetch("http://localhost:3000/api/order", {
+    const res = await fetch("/api/order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: selectedItem, quantity }),
@@ -31,7 +31,7 @@
 
   onMount(() => {
     const interval = setInterval(async () => {
-      const res = await fetch("http://localhost:3000/api/status");
+      const res = await fetch("/api/status");
       if (res.ok) {
         const data = await res.json();
         if (data.length > statusUpdates.length) {
