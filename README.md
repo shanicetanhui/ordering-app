@@ -11,9 +11,9 @@ Built with **SvelteKit + TypeScript** for the frontend and **Node.js + TypeScrip
 This app is part of a two-part system:
 
 - 👤 **Person A (this repo)** – Customer-facing web app for placing orders.
-- 👤 **Person B** – Kitchen Dashboard or CLI app that receives the orders.
+- 👤 **Person B** – Kitchen Dashboard that receives and manages the orders with PostgreSQL storage.
 
-The two apps communicate via RabbitMQ using a shared `orders` message queue.
+The two apps communicate via RabbitMQ using shared message queues (`order_created` and `order_status_updated`) for real-time order processing.
 
 ## Features
 
@@ -149,19 +149,33 @@ graph TB
     B --> C[SvelteKit App]
     C --> D[Backend API<br/>:3001]
     D --> E[RabbitMQ<br/>:5672]
-    E --> F[Person B App<br/>External]
+    E --> F[Kitchen Dashboard<br/>Person B - :3001]
+    F --> G[PostgreSQL<br/>:5432]
     
-    G[RabbitMQ Management<br/>:15672] --> E
+    H[RabbitMQ Management<br/>:15672] --> E
+    
+    E -.-> |order_created| F
+    F -.-> |order_status_updated| E
 ```
 
 ## Message Format
 
 Orders are sent to RabbitMQ in the following JSON format:
 
+**To Kitchen Dashboard (order_created queue):**
 ```json
 {
   "name": "item_name",
   "quantity": number
+}
+```
+
+**From Kitchen Dashboard (order_status_updated queue):**
+```json
+{
+  "orderId": number,
+  "status": "pending" | "received" | "completed",
+  "updatedAt": "ISO_timestamp"
 }
 ```
 
@@ -210,12 +224,30 @@ docker logs ordering-frontend
 
 ## For Person B (Message Consumer)
 
-To consume messages from the RabbitMQ queue in your separate application:
+To consume messages from the RabbitMQ queue in your separate Kitchen Dashboard application:
 
 1. Connect to RabbitMQ at `localhost:5672`
-2. Use credentials: `admin/admin`
-3. Listen to the `orders` queue
-4. Process incoming JSON messages
+2. Use credentials: `admin/admin` (or `guest/guest` if using default RabbitMQ setup)
+3. Listen to the `order_created` queue (or `orders` queue for compatibility)
+4. Send status updates back via `order_status_updated` queue
+5. Process incoming JSON messages in this format:
+
+**Order Message Format:**
+```json
+{
+  "name": "pizza",
+  "quantity": 2
+}
+```
+
+**Status Update Format (from Kitchen Dashboard):**
+```json
+{
+  "orderId": 1,
+  "status": "completed",
+  "updatedAt": "2025-07-01T10:30:00Z"
+}
+```
 
 ## Contributing
 
