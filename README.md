@@ -249,6 +249,37 @@ To consume messages from the RabbitMQ queue in your separate Kitchen Dashboard a
 }
 ```
 
+## Security Notes
+
+### Development vs Production
+This project uses default credentials (`admin/admin`) for local development. For production deployment:
+
+1. **Change default credentials**:
+   ```bash
+   # Create a .env file (not tracked in git)
+   cp .env.example .env
+   # Edit .env with secure credentials
+   ```
+
+2. **Use environment variables**:
+   ```bash
+   export RABBITMQ_DEFAULT_USER=your_secure_username
+   export RABBITMQ_DEFAULT_PASS=your_secure_password
+   ```
+
+3. **Never commit real credentials** to version control.
+
+### What's Safe in This Repo
+✅ Development credentials (admin/admin)  
+✅ Localhost references  
+✅ Docker configuration  
+✅ Source code  
+
+### What to Keep Private
+❌ Production credentials  
+❌ Real API keys  
+❌ .env files with secrets  
+
 ## Contributing
 
 1. Make your changes

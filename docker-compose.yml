@@ -9,8 +9,8 @@ services:
       - "5672:5672"     # AMQP port
       - "15672:15672"   # Management UI
     environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-admin}
       RABBITMQ_DEFAULT_VHOST: /
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
@@ -26,7 +26,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin}@rabbitmq:5672
     depends_on:
       - rabbitmq
     volumes:
