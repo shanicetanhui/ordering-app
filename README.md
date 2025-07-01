@@ -15,6 +15,8 @@ This app is part of a two-part system:
 
 The two apps communicate via RabbitMQ using shared message queues (`order_created` and `order_status_updated`) for real-time order processing.
 
+View Part B [here](https://github.com/shanicetanhui/kitchen-dashboard2) or [here](https://github.com/venicephua/kitchen-dashboard).
+
 ## Features
 
 - 🌐 Modern SvelteKit frontend with static generation
