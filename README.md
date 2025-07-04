@@ -55,9 +55,9 @@ View Part B [here](https://github.com/shanicetanhui/kitchen-dashboard2) or [here
    ```
 
 3. **Access the application:**
-   - 🌐 **Frontend**: http://localhost:3000
-   - 🔧 **Backend API**: http://localhost:3001
-   - 📊 **RabbitMQ Management**: http://localhost:15672 (admin/admin)
+   - 🌐 **Frontend**: http://localhost:8002
+   - 🔧 **Backend API**: http://localhost:8001
+   - 📊 **RabbitMQ Management**: http://localhost:9002 (admin/admin)
 
 That's it! The entire application is now running in Docker containers.
 
@@ -65,9 +65,9 @@ That's it! The entire application is now running in Docker containers.
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| Frontend | http://localhost:3000 | Customer ordering interface |
-| Backend API | http://localhost:3001 | REST API endpoints |
-| RabbitMQ Management | http://localhost:15672 | Queue monitoring (admin/admin) |
+| Frontend | http://localhost:8002 | Customer ordering interface |
+| Backend API | http://localhost:8001 | REST API endpoints |
+| RabbitMQ Management | http://localhost:9002 | Queue monitoring (admin/admin) |
 
 ## API Endpoints
 
@@ -91,7 +91,7 @@ Place a new order.
 
 **Example:**
 ```bash
-curl -X POST http://localhost:3001/api/order \
+curl -X POST http://localhost:8001/api/order \
      -H "Content-Type: application/json" \
      -d '{"name":"pizza","quantity":2}'
 ```
@@ -147,14 +147,14 @@ ordering-app/
 
 ```mermaid
 graph TB
-    A[Customer Browser] --> B[Nginx Frontend<br/>:3000]
+    A[Customer Browser] --> B[Nginx Frontend<br/>:8002]
     B --> C[SvelteKit App]
-    C --> D[Backend API<br/>:3001]
-    D --> E[RabbitMQ<br/>:5672]
+    C --> D[Backend API<br/>:8001]
+    D --> E[RabbitMQ<br/>:9001]
     E --> F[Kitchen Dashboard<br/>Person B - :3001]
     F --> G[PostgreSQL<br/>:5432]
     
-    H[RabbitMQ Management<br/>:15672] --> E
+    H[RabbitMQ Management<br/>:9002] --> E
     
     E -.-> |order_created| F
     F -.-> |order_status_updated| E
@@ -205,7 +205,7 @@ If you get "not_authorized" when logging into RabbitMQ Management UI:
    ```
 
 ### Port Conflicts
-If you get port conflicts, make sure no other services are running on ports 3000, 3001, 5672, or 15672.
+If you get port conflicts, make sure no other services are running on ports 8001, 8002, 9001, or 9002.
 
 ### RabbitMQ Connection Issues
 Check the backend logs:
@@ -228,10 +228,10 @@ docker logs ordering-frontend
 
 To consume messages from the RabbitMQ queue in your separate Kitchen Dashboard application:
 
-1. Connect to RabbitMQ at `localhost:5672`
-2. Use credentials: `admin/admin` (or `guest/guest` if using default RabbitMQ setup)
-3. Listen to the `order_created` queue (or `orders` queue for compatibility)
-4. Send status updates back via `order_status_updated` queue
+1. Connect to RabbitMQ at `localhost:9001`
+2. Use credentials: `admin/admin`
+3. Listen to the `orderQueue` queue
+4. Send status updates back via `orderStatus` queue
 5. Process incoming JSON messages in this format:
 
 **Order Message Format:**
