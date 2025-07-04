@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   # RabbitMQ Message Queue
   rabbitmq:
     image: rabbitmq:3-management
     container_name: ordering-rabbitmq
     ports:
-      - "5672:5672"     # AMQP port
-      - "15672:15672"   # Management UI
+      - "9001:5672"     # AMQP port
+      - "9002:15672"    # Management UI
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-admin}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-admin}
@@ -24,7 +22,7 @@ services:
       dockerfile: Dockerfile
     container_name: ordering-backend
     ports:
-      - "3001:3000"
+      - "8001:3000"
     environment:
       - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER:-admin}:${RABBITMQ_DEFAULT_PASS:-admin}@rabbitmq:5672
     depends_on:
@@ -43,7 +41,7 @@ services:
       dockerfile: Dockerfile
     container_name: ordering-frontend
     ports:
-      - "3000:80"
+      - "8002:80"
     depends_on:
       - backend
     networks:
