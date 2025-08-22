@@ -15,7 +15,7 @@ This app is part of a two-part system:
 
 The two apps communicate via RabbitMQ using shared message queues (`order_created` and `order_status_updated`) for real-time order processing.
 
-View Part B [here](https://github.com/venicephua/kitchen-dashboard) or [here](https://github.com/shanicetanhui/kitchen-dashboard2).
+View Part 2 [here](https://github.com/venicephua/kitchen-dashboard) or [here](https://github.com/shanicetanhui/kitchen-dashboard2).
 
 ## Features
 
