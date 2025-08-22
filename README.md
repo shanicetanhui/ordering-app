@@ -6,6 +6,8 @@ Built with **SvelteKit + TypeScript** for the frontend and **Node.js + TypeScrip
 
 🐳 **Fully Dockerized** - The entire application stack runs in Docker containers for easy deployment and development.
 
+For the most updated code, visit [order-kitchen](https://github.com/shanicetanhui/order-kitchen), which is a unified setup of Part 1 (ordering-app) and Part 2 (kitchen-dashboard).
+
 ## Overview
 
 This app is part of a two-part system:
